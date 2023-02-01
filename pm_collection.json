@@ -1,0 +1,508 @@
+{
+	"info": {
+		"_postman_id": "1e95e3b7-e122-4a65-b21c-debe6095eba1",
+		"name": "Team11_Api Queen Bees",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24753994"
+	},
+	"item": [
+		{
+			"name": "Program",
+			"item": [
+				{
+					"name": "Get All Program",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"console.log(pm.globals.get(\"pro\"));\r",
+									"\r",
+									"//delete the global variable after executing\r",
+									"pm.globals.unset(\"pro\");\r",
+									"\r",
+									"\r",
+									"\r",
+									"\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"  pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code name has string\", () => {\r",
+									"  pm.response.to.have.status(OK);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body is correct\", function () {\r",
+									"    pm.response.to.have.body(\"response_body_string\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Content-Type is present\", function () {\r",
+									"    pm.response.to.have.header(\"Content-Type\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body matches string\", function () {\r",
+									"    pm.expect(pm.response.text())\r",
+									"   .to.include(\"string_you_want_to_search\");\r",
+									"});\r",
+									"\r",
+									"console.log(\"pre-request script at Test level\");"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"console.log(\"pre-request script at request level\");\r",
+									"\r",
+									"//local variables\r",
+									"\r",
+									"pm.variables.set(\"BaseUrl_loc\", \"https://lms-backend-service.herokuapp.com/lms\");\r",
+									"\r",
+									"//Global variable\r",
+									"pm.globals.set(\"pro\", \"allPrograms\");\r",
+									"\r",
+									"//creating Environment variable\r",
+									"//pm.environment.set(\"\", \"\"); //here we have to pass the key and value like global.\r",
+									"\r",
+									"//collection variable\r",
+									"//pm.collectionVariables.set(\"col_var\", allprograms);\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BaseUrl_loc}}/{{pro}}",
+							"host": [
+								"{{BaseUrl_loc}}"
+							],
+							"path": [
+								"{{pro}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Program By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BaseUrl}}/Programs/9830",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"Programs",
+								"9830"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save Program",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const now = require('moment');\r",
+									"pm.variables.set(\"current_time\", now().format(\"YYYY-MM-DDTHH:mm:ss\"));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Schema validation\r",
+									"var schema= {\r",
+									"  \"$schema\": \"http://json-schema.org/draft-04/schema#\",\r",
+									"  \"type\": \"object\",\r",
+									"  \"properties\": {\r",
+									"    \"programName\": {\r",
+									"      \"type\": \"string\"\r",
+									"    },\r",
+									"    \"programDescription\": {\r",
+									"      \"type\": \"string\"\r",
+									"    },\r",
+									"    \"programStatus\": {\r",
+									"      \"type\": \"string\"\r",
+									"    },\r",
+									"    \"creationTime\": {\r",
+									"      \"type\": \"string\"\r",
+									"    },\r",
+									"    \"lastModTime\": {\r",
+									"      \"type\": \"string\"\r",
+									"    }\r",
+									"  },\r",
+									"  \"required\": [\r",
+									"    \"programName\",\r",
+									"    \"programDescription\",\r",
+									"    \"programStatus\",\r",
+									"    \"creationTime\",\r",
+									"    \"lastModTime\"\r",
+									"  ]\r",
+									"}\r",
+									"var jsonData=pm.response.json();\r",
+									"pm.test('Scema is valid', function(){\r",
+									"    pm.expect(tv4.validate(jsonData, schema)).to.be.true;\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"programName\": \"PostgreSQL14\",\r\n\"programDescription\": \"Learn PostgreSql14\",\r\n\"programStatus\": \"Active\",\r\n\"creationTime\": \"{{current_time}}\",\r\n\"lastModTime\": \"{{current_time}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/saveprogram",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"saveprogram"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Program By Id",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const now = require('moment');\r",
+									"pm.variables.set(\"current_time\", now().format(\"YYYY-MM-DDTHH:mm:ss\"));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code name has string\", () => {\r",
+									"  pm.response.to.have.status(\"Created\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type header is present\", () => {\r",
+									"  pm.response.to.have.header(\"Content-Type\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Content-Type header is application/json\", () => {\r",
+									"  pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time is less than 200ms\", () => {\r",
+									"  pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Cookie JSESSIONID is present\", () => {\r",
+									"  pm.expect(pm.cookies.has('JSESSIONID')).to.be.true;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"programName\": \"SQL\",\r\n\"programDescription\": \"SQL\",\r\n\"programStatus\": \"Active\",\r\n\"creationTime\": \"{{current_time}}\",\r\n\"lastModTime\": \"{{current_time}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/putprogram/14585",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"putprogram",
+								"14585"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Program By Name",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"programName\": \"Selenium\",\r\n\"programDescription\": \"Master PostgreSql4\",\r\n\"programStatus\": \"Active\",\r\n\"creationTime\": \"2023-01-07T04:13:00.000+00:00\",\r\n\"lastModTime\": \"2023-01-07T04:13:00.000+00:00\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/program/PostgreSQL14",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"program",
+								"PostgreSQL14"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete By Id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BaseUrl}}/deletebyprogid/15609",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"deletebyprogid",
+								"15609"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete By Program Name",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://lms-backend-service.herokuapp.com/lms/deletebyprogname/Jan23-API Queen Bees-SDET-110",
+							"protocol": "https",
+							"host": [
+								"lms-backend-service",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"lms",
+								"deletebyprogname",
+								"Jan23-API Queen Bees-SDET-110"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Batch",
+			"item": [
+				{
+					"name": "Get All Batches",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code name has string\", () => {\r",
+									"  pm.response.to.have.status(\"Created\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Content-Type header is present\", () => {\r",
+									"  pm.response.to.have.header(\"Content-Type\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Content-Type header is application/json\", () => {\r",
+									"  pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json');\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response time is less than 200ms\", () => {\r",
+									"  pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Cookie JSESSIONID is present\", () => {\r",
+									"  pm.expect(pm.cookies.has('JSESSIONID')).to.be.true;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BaseUrl}}/batches",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"batches"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Batches By Batch Name",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://lms-backend-service.herokuapp.com/lms/batches/batchName/Jan23-API Queen Bees-SDET-110",
+							"protocol": "https",
+							"host": [
+								"lms-backend-service",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"lms",
+								"batches",
+								"batchName",
+								"Jan23-API Queen Bees-SDET-110"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Batches By Program Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BaseUrl}}/batches/program/7635",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"batches",
+								"program",
+								"7635"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Batch By Id",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"batchName\": \"02\",\r\n\"batchDescription\": \"Java Program Batch 03\",\r\n\"batchStatus\": \"Active\",\r\n\"batchNoOfClasses\": 4,\r\n\"programId\": 265,\r\n\"programName\": \"SDET\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/batches/55",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"batches",
+								"55"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete by Batch id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BaseUrl}}/batches/8003",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"batches",
+								"8003"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create batch",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"batchName\": \"{{bName}}\",\r\n\"batchDescription\": \"{{bDesc}}\",\r\n\"batchStatus\": \"Active\",\r\n\"batchNoOfClasses\": 12,\r\n\"programId\": 7622\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/batches",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"batches"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "BaseUrl",
+			"value": "https://lms-backend-service.herokuapp.com/lms"
+		}
+	]
+}
